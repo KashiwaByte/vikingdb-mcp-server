@@ -51,7 +51,7 @@ def serve(
         return [
             types.Tool(
                 name="vikingdb-upsert-information",
-                description="upset information to vikingdb for later use",
+                description="upsert information to vikingdb for later use",
                 inputSchema={
                     "type": "object",
                     "properties": {
