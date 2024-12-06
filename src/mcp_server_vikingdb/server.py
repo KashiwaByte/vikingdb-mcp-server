@@ -1,155 +1,176 @@
-import asyncio
+from typing import Optional
 
+from mcp.server import Server, NotificationOptions
 from mcp.server.models import InitializationOptions
+
+import click
 import mcp.types as types
-from mcp.server import NotificationOptions, Server
-from pydantic import AnyUrl
-import mcp.server.stdio
+import asyncio
+import mcp
 
-# Store notes as a simple key-value dict to demonstrate state management
-notes: dict[str, str] = {}
+from .vikingdb import VikingDBConnector
 
-server = Server("mcp-server-vikingdb")
 
-@server.list_resources()
-async def handle_list_resources() -> list[types.Resource]:
+def serve(
+    vikingdb_host: str, 
+    vikingdb_region: str, 
+    vikingdb_ak: str, 
+    vikingdb_sk: str,
+    collection_name: str,
+    index_name: str
+) -> Server:
     """
-    List available note resources.
-    Each note is exposed as a resource with a custom note:// URI scheme.
+    Encapsulates the connection to a VikingDB server and some  methods to interact with it.
+    :param vikingdb_host: The host to use for the VikingDB server.
+    :param vikingdb_region: The region to use for the VikingDB server.
+    :param vikingdb_ak: The Access Key to use for the VikingDB server.
+    :param vikingdb_sk: The Secret Key to use for the VikingDB server.
+    :param collection_name: The name of the collection to use.
+    :param index_name: The name of the index to use.
     """
-    return [
-        types.Resource(
-            uri=AnyUrl(f"note://internal/{name}"),
-            name=f"Note: {name}",
-            description=f"A simple note named {name}",
-            mimeType="text/plain",
+    
+
+
+    server = Server("mcp-server-vikingdb")
+
+    vikingdb = VikingDBConnector(
+            vikingdb_host,
+            vikingdb_region,
+            vikingdb_ak,
+            vikingdb_sk,
+            collection_name,
+            index_name
         )
-        for name in notes
-    ]
-
-@server.read_resource()
-async def handle_read_resource(uri: AnyUrl) -> str:
-    """
-    Read a specific note's content by its URI.
-    The note name is extracted from the URI host component.
-    """
-    if uri.scheme != "note":
-        raise ValueError(f"Unsupported URI scheme: {uri.scheme}")
-
-    name = uri.path
-    if name is not None:
-        name = name.lstrip("/")
-        return notes[name]
-    raise ValueError(f"Note not found: {name}")
-
-@server.list_prompts()
-async def handle_list_prompts() -> list[types.Prompt]:
-    """
-    List available prompts.
-    Each prompt can have optional arguments to customize its behavior.
-    """
-    return [
-        types.Prompt(
-            name="summarize-notes",
-            description="Creates a summary of all notes",
-            arguments=[
-                types.PromptArgument(
-                    name="style",
-                    description="Style of the summary (brief/detailed)",
-                    required=False,
-                )
-            ],
-        )
-    ]
-
-@server.get_prompt()
-async def handle_get_prompt(
-    name: str, arguments: dict[str, str] | None
-) -> types.GetPromptResult:
-    """
-    Generate a prompt by combining arguments with server state.
-    The prompt includes all current notes and can be customized via arguments.
-    """
-    if name != "summarize-notes":
-        raise ValueError(f"Unknown prompt: {name}")
-
-    style = (arguments or {}).get("style", "brief")
-    detail_prompt = " Give extensive details." if style == "detailed" else ""
-
-    return types.GetPromptResult(
-        description="Summarize the current notes",
-        messages=[
-            types.PromptMessage(
-                role="user",
-                content=types.TextContent(
-                    type="text",
-                    text=f"Here are the current notes to summarize:{detail_prompt}\n\n"
-                    + "\n".join(
-                        f"- {name}: {content}"
-                        for name, content in notes.items()
-                    ),
-                ),
-            )
-        ],
-    )
-
-@server.list_tools()
-async def handle_list_tools() -> list[types.Tool]:
-    """
-    List available tools.
-    Each tool specifies its arguments using JSON Schema validation.
-    """
-    return [
-        types.Tool(
-            name="add-note",
-            description="Add a new note",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string"},
-                    "content": {"type": "string"},
+    
+    @server.list_tools()
+    async def handle_list_tools() -> list[types.Tool]:
+        """
+        List available tools.
+        Each tool specifies its arguments using JSON Schema validation.
+        """
+        return [
+            types.Tool(
+                name="vikingdb-upsert-information",
+                description="upset information to vikingdb for later use",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "information": {
+                            "type": "string",
+                        },
+                    },
+                    "required": ["information"],
                 },
-                "required": ["name", "content"],
-            },
-        )
-    ]
+            ),
+            types.Tool(
+                name="vikingdb-search-information",
+                description=(
+                    "Look up information in VikingDB. Use this tool when you need to: \n"
+                    " - Search for information by their query \n"
+                    " - Access information for further analysis \n"
+                    " - Get some personal information about the user"
+                ),
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "The query to search for in the vikingdb",
+                        },
+                    },
+                    "required": ["query"],
+                },
+            ),
+        ]
 
-@server.call_tool()
-async def handle_call_tool(
-    name: str, arguments: dict | None
-) -> list[types.TextContent | types.ImageContent | types.EmbeddedResource]:
-    """
-    Handle tool execution requests.
-    Tools can modify server state and notify clients of changes.
-    """
-    if name != "add-note":
-        raise ValueError(f"Unknown tool: {name}")
+    @server.call_tool()
+    async def handle_call_tool(
+        name: str, arguments: dict | None
+    ) -> list[types.TextContent | types.ImageContent | types.EmbeddedResource]:
+        """
+        Handle tool execution requests.
+        Tools can modify server state and notify clients of changes.
+        """
+        if name not in ["vikingdb-upsert-information", "vikingdb-search-information"]:
+            raise ValueError(f"Unknown tool: {name}")
 
-    if not arguments:
-        raise ValueError("Missing arguments")
+        if name == "vikingdb-upsert-information":
+            if not arguments or "information" not in arguments:
+                raise ValueError("Missing required argument 'information'")
+            information = arguments["information"]
+            await vikingdb.upsert_information(information)
+            return [types.TextContent(type="text", text=f"{information} has been added to vikingdb {collection_name}")]
+        
+        if name == "vikingdb-search-information":
+            if not arguments or "query" not in arguments:
+                raise ValueError("Missing required argument 'query'")
+            query = arguments["query"]
+            results = await vikingdb.search_information(query)
+            return [types.TextContent(type="text", text=f"Search results for {query}:\n{results}")]
+        
+    return server
+    
+    
+@click.command()
+@click.option(
+    "--vikingdb-host",
+    envvar="VIKINGDB_HOST",
+    required=True,
+    help="VIKINGDB_HOST",
+    default="api-vikingdb.volces.com",
+)
 
-    note_name = arguments.get("name")
-    content = arguments.get("content")
+@click.option(
+    "--vikingdb-region",
+    envvar="VIKINGDB_REGION",
+    required=True,
+    help="VIKINGDB_REGION",
+    default="cn-beijing",
+)
+@click.option(
+    "--vikingdb-ak",
+    envvar="VIKINGDB_AK",
+    required=True,
+    help="VIKINGDB_AK",
+)
+@click.option(
+    "--vikingdb-sk",
+    envvar="VIKINGDB_SK",
+    required=True,
+    help="VIKINGDB_SK",
+)
+@click.option(
+    "--collection-name",
+    envvar="COLLECTION_NAME",
+    required=True,
+    help="Collection name",
+)
+@click.option(
+    "--index-name",
+    envvar="INDEX_NAME",
+    required=True,
+    help="Index name",
+)
 
-    if not note_name or not content:
-        raise ValueError("Missing name or content")
+def main(
+    vikingdb_host, 
+    vikingdb_region,
+    vikingdb_ak,
+    vikingdb_sk,
+    collection_name,
+    index_name,
+):
 
-    # Update server state
-    notes[note_name] = content
-
-    # Notify clients that resources have changed
-    await server.request_context.session.send_resource_list_changed()
-
-    return [
-        types.TextContent(
-            type="text",
-            text=f"Added note '{note_name}' with content: {content}",
-        )
-    ]
-
-async def main():
-    # Run the server using stdin/stdout streams
-    async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+    async def _run():
+        async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
+            server = serve(
+                vikingdb_host, 
+                vikingdb_region, 
+                vikingdb_ak, 
+                vikingdb_sk,
+                collection_name,
+                index_name
+            )
         await server.run(
             read_stream,
             write_stream,
@@ -162,3 +183,6 @@ async def main():
                 ),
             ),
         )
+
+    asyncio.run(_run())
+
