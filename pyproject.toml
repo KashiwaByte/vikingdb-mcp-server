@@ -5,6 +5,7 @@ description = "a mcp server for vikingdb store and search"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+ "aiohttp>=3.11.10",
  "mcp>=1.1.0",
  "python-dotenv>=1.0.1",
  "volcengine>=1.0.164",

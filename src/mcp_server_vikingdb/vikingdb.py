@@ -4,13 +4,7 @@ import os
 import random
 from volcengine.viking_db import *
 
-load_dotenv()
-ak = os.getenv('AK')
-sk = os.getenv('SK')
 
-vikingdb_service = VikingDBService(host="api-vikingdb.volces.com", region="cn-beijing",connection_timeout=100)
-vikingdb_service.set_ak(ak)
-vikingdb_service.set_sk(sk)
 
 class VikingDBConnector:
     """
@@ -60,7 +54,7 @@ class VikingDBConnector:
             
             
         async def search_information(self, query:str):
-            search_vector = await vikingdb_service.embedding_v2(EmbModel("bge-m3", params={"return_token_usage": True}), [RawData("text", query)])["sentence_dense_embedding"][0]
+            search_vector = await self._client.embedding_v2(EmbModel("bge-m3", params={"return_token_usage": True}), [RawData("text", query)])["sentence_dense_embedding"][0]
             search_res = await self._index.search_by_vector(search_vector,limit=1) #纯稠密检索
             
             return search_res[0].fields

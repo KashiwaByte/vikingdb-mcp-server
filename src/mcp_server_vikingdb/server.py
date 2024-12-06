@@ -169,7 +169,7 @@ def main(
                 vikingdb_ak, 
                 vikingdb_sk,
                 collection_name,
-                index_name
+                index_name,
             )
         await server.run(
             read_stream,
