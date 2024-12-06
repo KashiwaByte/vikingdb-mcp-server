@@ -125,7 +125,6 @@ def serve(
     envvar="VIKINGDB_REGION",
     required=True,
     help="VIKINGDB_REGION",
-    default="cn-beijing",
 )
 @click.option(
     "--vikingdb-ak",
