@@ -45,9 +45,21 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "command": "uv",
       "args": [
         "--directory",
-        "/Users/bytedance/Documents/workproject/mcp/mcp-server-vikingdb",
+        "dir to mcp-server-vikingdb",
         "run",
         "mcp-server-vikingdb"
+        "--vikingdb-host", 
+        "your host",
+        "--vikingdb-region", 
+        "your region",
+        "--vikingdb-ak", 
+        "your access key",
+        "--vikingdb-sk", 
+        "your secret key",
+        "--collection-name",
+        "your collection name",
+        "--index-name",
+        "your index name"
       ]
     }
   }
