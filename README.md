@@ -27,9 +27,9 @@ The server implements one tool:
 On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
-<details>
-  <summary>Development/Unpublished Servers Configuration</summary>
-  ```
+Development/Unpublished Servers Configuration
+```
+{
   "mcpServers": {
     "mcp-server-vikingdb": {
       "command": "uv",
@@ -37,7 +37,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
         "--directory",
         "dir to mcp-server-vikingdb",
         "run",
-        "mcp-server-vikingdb"
+        "mcp-server-vikingdb",
         "--vikingdb-host", 
         "your host",
         "--vikingdb-region", 
@@ -53,22 +53,24 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       ]
     }
   }
-  ```
-</details>
+}
 
-<details>
-  <summary>Published Servers Configuration</summary>
   ```
-  "mcpServers": {
-    "mcp-server-vikingdb": {
-      "command": "uvx",
-      "args": [
-        "mcp-server-vikingdb"
+
+Published Servers Configuration
+  ```
+{
+    "mcpServers": {
+      "mcp-server-vikingdb": {
+        "command": "uvx",
+        "args": [
+          "mcp-server-vikingdb"
       ]
+     }
     }
-  }
+  } 
   ```
-</details>
+
 
 ## Development
 
