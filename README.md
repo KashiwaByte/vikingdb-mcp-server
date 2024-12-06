@@ -108,7 +108,7 @@ experience, we strongly recommend using the [MCP Inspector](https://github.com/m
 You can launch the MCP Inspector via [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
 
 ```bash
-npx @modelcontextprotocol/inspector uv --directory /Users/bytedance/Documents/workproject/mcp/mcp-server-vikingdb run mcp-server-vikingdb
+npx @modelcontextprotocol/inspector uv --directory dir_to_mcp_server_vikingdb run mcp-server-vikingdb --vikingdb-host your_host --vikingdb-region your_region --vikingdb-ak your_access_key --vikingdb-sk your_secret_key --collection-name your_collection_name --index-name your_index_name
 ```
 
 
