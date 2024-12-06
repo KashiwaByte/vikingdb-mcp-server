@@ -40,21 +40,26 @@ class VikingDBConnector:
             sk=self._vikingdb_sk,
             connection_timeout=100)
         
-        self._collection = self._client.get_collection(self._collection_name)
+        self._collection = self._client.async_get_collection(self._collection_name)
         self._index = self._client.get_index(self._collection_name, self._index_name)
         
         
-        async def upsert_information(self, information:str):
-            vector = await self._client.embedding_v2(EmbModel("bge-m3", params={"return_token_usage": True}), [RawData("text", information)])["sentence_dense_embedding"][0]
-            field1 = {"text_id": random.randint(10,100000),"text_content": information,"text_vector":vector}
-            data1 = Data(field1)
-            datas = []
-            datas.append(data1)
-            await self._collection.upsert_data(datas)  
-            
-            
-        async def search_information(self, query:str):
-            search_vector = await self._client.embedding_v2(EmbModel("bge-m3", params={"return_token_usage": True}), [RawData("text", query)])["sentence_dense_embedding"][0]
-            search_res = await self._index.search_by_vector(search_vector,limit=1) #纯稠密检索
-            
-            return search_res[0].fields
+    async def upsert_information(self, information:str):
+        self._collection = await self._client.async_get_collection(self._collection_name)
+        vector = await  self._client.async_embedding_v2(EmbModel("bge-m3", params={"return_token_usage": True}), [RawData("text", information)])
+        vector = vector["sentence_dense_embedding"][0]
+        field1 = {"text_id": random.randint(10,100000),"text_content": information,"text_vector":vector}
+        data1 = Data(field1)
+        datas = []
+        datas.append(data1)
+        await self._collection.async_upsert_data(datas)  
+        
+        
+    async def search_information(self, query:str):
+        self._collection = await self._client.async_get_collection(self._collection_name)
+        self._index = await self._client.async_get_index(self._collection_name, self._index_name)
+        search_vector = await self._client.async_embedding_v2(EmbModel("bge-m3", params={"return_token_usage": True}), [RawData("text", query)])
+        search_vector = search_vector["sentence_dense_embedding"][0]
+        search_res = await self._index.async_search_by_vector(search_vector,limit=1) #纯稠密检索
+        
+        return search_res[0].fields
