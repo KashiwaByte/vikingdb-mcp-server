@@ -8,7 +8,12 @@ a mcp server for vikingdb store and search
 
 ### Tools
 
-The server implements one tool:
+The server implements the following tools:
+
+- vikingdb-colleciton-intro: introduce the collection of vikingdb
+
+- vikingdb-index-intro: introduce the index of vikingdb
+
 - vikingdb-upsert-information: upsert information to vikingdb for later use
 
 - vikingdb-search-information: Searches for information in the VikingDB
