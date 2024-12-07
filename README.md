@@ -16,7 +16,18 @@ The server implements one tool:
   
 ## Configuration
 
-[TODO: Add configuration details specific to your implementation]
+- vikingdb_host: The host to use for the VikingDB server.
+
+- vikingdb_region: The region to use for the VikingDB server.
+ 
+ - vikingdb_ak: The Access Key to use for the VikingDB server.
+
+ - vikingdb_sk: The Secret Key to use for the VikingDB server.
+ 
+- collection_name: The name of the collection to use.
+
+- index_name: The name of the index to use.
+
 
 ## Quickstart
 
@@ -25,7 +36,9 @@ The server implements one tool:
 #### Claude Desktop
 
 On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
+
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
 
 Development/Unpublished Servers Configuration
 ```
@@ -64,7 +77,19 @@ Published Servers Configuration
       "mcp-server-vikingdb": {
         "command": "uvx",
         "args": [
-          "mcp-server-vikingdb"
+          "mcp-server-vikingdb",
+          "--vikingdb-host", 
+          "your host",
+          "--vikingdb-region", 
+          "your region",
+          "--vikingdb-ak", 
+          "your access key",
+          "--vikingdb-sk", 
+          "your secret key",
+          "--collection-name",
+          "your collection name",
+          "--index-name",
+          "your index name"
       ]
      }
     }
