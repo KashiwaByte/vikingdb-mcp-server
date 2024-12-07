@@ -16,7 +16,7 @@ The server implements the following tools:
 
 - vikingdb-upsert-information: upsert information to vikingdb for later use
 
-- vikingdb-search-information: Searches for information in the VikingDB
+- vikingdb-search-information: searche for information in the VikingDB
   
   
 ## Configuration
