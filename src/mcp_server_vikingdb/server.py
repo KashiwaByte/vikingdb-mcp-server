@@ -152,12 +152,12 @@ def serve(
 )
 
 def main(
-    vikingdb_host, 
-    vikingdb_region,
-    vikingdb_ak,
-    vikingdb_sk,
-    collection_name,
-    index_name,
+    vikingdb_host: str, 
+    vikingdb_region: str,
+    vikingdb_ak: str,
+    vikingdb_sk: str,
+    collection_name: str,
+    index_name: str,
 ):
 
     async def _run():
