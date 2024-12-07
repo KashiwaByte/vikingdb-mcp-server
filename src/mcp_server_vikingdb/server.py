@@ -50,6 +50,22 @@ def serve(
         """
         return [
             types.Tool(
+                name="vikingdb-collection-intro",
+                description="introduce the collection of vikingdb",
+                inputSchema={
+                    "type": "object",
+                    "properties": {},
+                },
+            ),
+            types.Tool(
+                name="vikingdb-index-intro",
+                description="introduce the index of vikingdb",
+                inputSchema={
+                    "type": "object",
+                 "properties": {},
+                },
+            ),
+            types.Tool(
                 name="vikingdb-upsert-information",
                 description="upsert information to vikingdb for later use",
                 inputSchema={
@@ -91,9 +107,17 @@ def serve(
         Handle tool execution requests.
         Tools can modify server state and notify clients of changes.
         """
-        if name not in ["vikingdb-upsert-information", "vikingdb-search-information"]:
+        if name not in ["vikingdb-collection-intro","vikingdb-index-intro","vikingdb-upsert-information", "vikingdb-search-information"]:
             raise ValueError(f"Unknown tool: {name}")
 
+        if name == "vikingdb-collection-intro":
+            results = await vikingdb.collection_intro()
+            return [types.TextContent(type="text", text=f"The basic information of Collection {collection_name} is {results}")]
+        
+        if name == "vikingdb-index-intro":
+            results = await vikingdb.index_intro()
+            return [types.TextContent(type="text", text=f"The basic information of Index {index_name} is {results}")]
+        
         if name == "vikingdb-upsert-information":
             if not arguments or "information" not in arguments:
                 raise ValueError("Missing required argument 'information'")
@@ -175,7 +199,7 @@ def main(
                 write_stream,
                 InitializationOptions(
                     server_name="mcp-server-vikingdb",
-                    server_version="0.1.0",
+                    server_version="0.1.1",
                     capabilities=server.get_capabilities(
                         notification_options=NotificationOptions(),
                         experimental_capabilities={},

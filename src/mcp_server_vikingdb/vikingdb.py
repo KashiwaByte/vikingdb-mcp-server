@@ -42,7 +42,29 @@ class VikingDBConnector:
         
         self._collection = self._client.async_get_collection(self._collection_name)
         self._index = self._client.get_index(self._collection_name, self._index_name)
+    
+    async def collection_intro(self):
+            self._collection = await self._client.async_get_collection(self._collection_name)
+            intro_dict = {"collection_name":self._collection.collection_name,
+                          "primary_key":self._collection.primary_key,
+                          "description":self._collection.description,
+                          "store_status":self._collection.stat,
+                          "create_time":self._collection.create_time,
+                          "update_time":self._collection.update_time,
+                          "update_person":self._index.update_person,}
+            return intro_dict
         
+    async def index_intro(self):
+            self._index = await self._client.async_get_index(self._collection_name, self._index_name)
+            intro_dict = {"index_name":self._index.index_name,
+                          "primary_key":self._index.primary_key,
+                          "description":self._index.description,
+                          "index_vector":self._index.vector_index,
+                          "index_scalar":self._index.scalar_index,
+                          "create_time":self._index.create_time,
+                          "update_time":self._index.update_time,
+                          "update_person":self._index.update_person,}
+            return intro_dict
         
     async def upsert_information(self, information:str):
         self._collection = await self._client.async_get_collection(self._collection_name)
