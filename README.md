@@ -1,8 +1,12 @@
 # VikingDB MCP server
 
-a mcp server for vikingdb store and search
+an mcp server for vikingdb store and search
 
-## Components
+## What is VikingDB
+VikingDB is a high-performance vector database developed by ByteDance. 
+
+You can easily use it following the doc bellow:
+https://www.volcengine.com/docs/84313/1254444
 
 
 
