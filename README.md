@@ -1,5 +1,6 @@
 # VikingDB MCP server
 
+[![smithery badge](https://smithery.ai/badge/mcp-server-vikingdb)](https://smithery.ai/protocol/mcp-server-vikingdb)
 an mcp server for vikingdb store and search
 
 ## What is VikingDB
@@ -41,6 +42,14 @@ The server implements the following tools:
 ## Quickstart
 
 ### Install
+
+### Installing via Smithery
+
+To install VikingDB MCP server for Claude Desktop automatically via [Smithery](https://smithery.ai/protocol/mcp-server-vikingdb):
+
+```bash
+npx @smithery/cli install mcp-server-vikingdb --client claude
+```
 
 #### Claude Desktop
 
