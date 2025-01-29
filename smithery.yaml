@@ -1,0 +1,37 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - vikingdbHost
+      - vikingdbRegion
+      - vikingdbAk
+      - vikingdbSk
+      - collectionName
+      - indexName
+    properties:
+      vikingdbHost:
+        type: string
+        description: The host to use for the VikingDB server.
+      vikingdbRegion:
+        type: string
+        description: The region to use for the VikingDB server.
+      vikingdbAk:
+        type: string
+        description: The Access Key to use for the VikingDB server.
+      vikingdbSk:
+        type: string
+        description: The Secret Key to use for the VikingDB server.
+      collectionName:
+        type: string
+        description: The name of the collection to use.
+      indexName:
+        type: string
+        description: The name of the index to use.
+  commandFunction:
+    # A function that produces the CLI command to start the MCP on stdio.
+    |-
+    (config) => ({ command: 'uv', args: ['run', 'mcp-server-vikingdb'], env: { VIKINGDB_HOST: config.vikingdbHost, VIKINGDB_REGION: config.vikingdbRegion, VIKINGDB_AK: config.vikingdbAk, VIKINGDB_SK: config.vikingdbSk, COLLECTION_NAME: config.collectionName, INDEX_NAME: config.indexName } })
