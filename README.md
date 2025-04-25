@@ -1,3 +1,5 @@
+[![MseeP Badge](https://mseep.net/pr/kashiwabyte-vikingdb-mcp-server-badge.jpg)](https://mseep.ai/app/kashiwabyte-vikingdb-mcp-server)
+
 # VikingDB MCP server
 
 [![smithery badge](https://smithery.ai/badge/mcp-server-vikingdb)](https://smithery.ai/server/mcp-server-vikingdb)
