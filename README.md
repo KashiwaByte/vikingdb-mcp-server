@@ -1,4 +1,5 @@
 # VikingDB MCP server
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/KashiwaByte/vikingdb-mcp-server)](https://archestra.ai/mcp-catalog/kashiwabyte__vikingdb-mcp-server)
 
 [![smithery badge](https://smithery.ai/badge/mcp-server-vikingdb)](https://smithery.ai/server/mcp-server-vikingdb)
 an mcp server for vikingdb store and search
