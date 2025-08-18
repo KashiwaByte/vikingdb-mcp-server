@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/kashiwabyte-vikingdb-mcp-server-badge.jpg)](https://mseep.ai/app/kashiwabyte-vikingdb-mcp-server)
+
 # VikingDB MCP server
 [![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/KashiwaByte/vikingdb-mcp-server)](https://archestra.ai/mcp-catalog/kashiwabyte__vikingdb-mcp-server)
 
