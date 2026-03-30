@@ -159,3 +159,8 @@ npx @modelcontextprotocol/inspector uv --directory dir_to_mcp_server_vikingdb ru
 
 
 Upon launching, the Inspector will display a URL that you can access in your browser to begin debugging.
+
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/kashiwabyte-vikingdb-mcp-server).
+
