@@ -3,7 +3,7 @@
 # VikingDB MCP server
 [![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/KashiwaByte/vikingdb-mcp-server)](https://archestra.ai/mcp-catalog/kashiwabyte__vikingdb-mcp-server)
 
-[![smithery badge](https://smithery.ai/badge/mcp-server-vikingdb)](https://smithery.ai/server/mcp-server-vikingdb)
+[![Listed on LightNow](https://lightnow.ai/badge/io.github.kashiwabyte/vikingdb-mcp-server?variant=listed)](https://lightnow.ai/servers/io.github.kashiwabyte/vikingdb-mcp-server)
 an mcp server for vikingdb store and search
 
 ## What is VikingDB
